@@ -1,0 +1,79 @@
+<!creating a navbar so that its easier to go to offlinks>
+
+<!Bootstrap navbar documentation>
+{% load custom_tags %}
+<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light ">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+  <!chaning urls based on if statement - if user has logged in then directed to social feed else to index page>                     
+    <a class="navbar-brand" 
+    {% if user.is_authenticated %}
+    href="{% url 'post-list' %}"
+    {% else %} 
+    href="{% url 'index' %}"
+    {% endif %}>
+    <i class="material-icons"><div style = "position:relative; left:0px; top:5px;">computer</div></i> Slam Book</a> <!changing social network to Slam Book>
+
+
+
+    <!i class="material-icons lines shows an icon, can have different ions like cloud,favorite,attachment,traffic,computer,book,message,chat">
+    <!The icon code from : https://www.w3schools.com/icons/   the link part is in base.html>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li>
+          <a class="inbox-icon" href="{% url 'explore' %}">
+            <i class="far fa-bookmark"></i>
+          </a>  
+        </li>
+      </ul>
+      <! Get request and action sends the form data to url>
+      <form class="d-flex" method="GET" action="{% url 'profile-search' %}">
+
+        <!Searching for user ID>
+
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">@</span>
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="
+          basic-addon1" name="query" value="{{ request.GET.query }}">
+          <!request.GET.query in our url the query takes in the input >
+          
+          <button "remove-defualt-btn" type="submit"><i class="fas fa-search"></i></button>
+          <!click a button to submit>
+    </div>
+      </form>
+      
+
+      <! if statement to check if theyre signed in>
+      {% if user.is_authenticated %}
+      <!if the user is authenticated it wills how this, else nothing>
+      
+      <!if yes it displays a dropdown that displays profile info>
+      <div class="nav-item dropdown">
+                                                                                                                            <!fas fa-user to create a user icon>        
+        <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" role="buton" aria-expanded="false"><i class="fas fa-user"></i></a>
+        <ul class="dropdown-menu">
+
+          <! creating profile and sign out inside drop down> 
+          <li><a class="dropdown-item" href="{% url 'profile' request.user.profile.pk %}">Profile</a></li>
+          <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>
+          <!Dropdown will only be there if youre signed in, once signed out - it will be gone ,i.e the profile and sign out option is gone>
+        
+        </ul>
+      </div>
+
+      <div class="nav-item inbox-icon-container">
+        <a href="{% url 'inbox' %}" class="inbox-icon"><i class="far fa-paper-plane"></i></a>
+      </div>
+      <div class="nav-item">
+        {% show_notifications %}
+      <! shows notifucations>
+
+      {% endif %}
+    </div>
+  </div>
+</nav>
+</div>

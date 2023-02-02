@@ -1,0 +1,124 @@
+<!extending base template from the landing page>
+{%extends 'landing/base.html'%}
+
+{% load crispy_forms_tags %}
+
+{%block content%}
+<div class="container">
+
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <!adding a url so that we can go back i.e. back button to go back to the social feed>
+            <a href="{% url 'post-list' %}" class ="btn btn-light">Back To Feed</a>
+        </div>
+    </div>
+    
+
+    <!displaying the post>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom">
+
+                <div>
+
+                    <! displaying profile image next to post>
+                    <a href="{% url 'profile' post.author.profile.pk %}">
+                        <img class="round-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}" />
+                    </a>
+    
+                    <p class="post-text">
+                        <a class="text-primary post-link" href="{% url 'profile' post.author.profile.pk %}"
+                        >@{{ post.author }}</a> {{post.created_on}}
+                    </p>
+                </div>
+                
+                <!creating links so that only the author can edit or delete>
+                
+                {% if request.user == post.author %}
+                    <a href="{% url 'post-edit' post.pk %}" class="edit-colorpos"><i class="far fa-edit"></i></a>
+                    <a href="{% url 'post-delete' post.pk %}" class="edit-colorpos"><i class="fas fa-trash"></i></a>   
+                {% endif %}
+
+                {% if post.image.count > 0 %}
+                      <div class="row">
+                        {% for img in post.image.all %}
+                            <div class="col-md-6 col-xs-12">
+                                <img src="{{ img.image.url }}" class="post-image" />
+                            </div>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+
+                    <div class='body'>
+                        <p>{{ post.body }}</p>
+                    </div>
+
+            <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <! hidden input field that is hidden with a path are currently on and return to our previous view/template>
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <! button to submit the form, add a syle to remove generic button styles>
+                    <button class="remove-default-btn" type="submit">
+                        <!icon>
+                        <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
+                    </button>
+                </form>
+
+
+                <! make the dislike button icon>
+                <form method="POST" action="{% url 'dislike' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <!django template variable - double curly braces>
+                        <!post.dislikes.all.count counts how manyitems are in the ManyToManyField>
+                        <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
+                    </button>
+                </form>
+            </div>    
+            
+        </div>
+    </div>
+
+
+    
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12">
+            <!creating a form tag>
+            <form method="POST">
+                <!putting our actual form>
+                {% csrf_token %} <! required while making a post form in django>
+                {{ form | crispy}}
+
+                <!create a submit button>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success mt-3">Submit!</button>
+                </div>
+            </form>
+        </div>
+    </div> 
+
+    {% for comment in comments %}
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <p>
+                <div>
+                    <a href="{% url 'profile' comment.author.profile.pk %}">
+                        <img class="round-circle post-img" height="30" width="30" src="{{ comment.author.profile.picture.url }}" />
+                    </a>
+                    <p class="post-text">
+                        <a class="text-primary post-link" href="{% url 'profile' comment.author.profile.pk %}">@{{ comment.author }}</a> {{ comment.created_on }}
+                    </p>
+                </div>
+                {% if request.user == comment.author %}
+                    <a href="{% url 'comment-delete' post.pk comment.pk %}" class="edit-colorpos"><i class="fas fa-trash"></i></a>
+                {% endif %}
+            </p>
+            <p>{{ comment.comment }}</p>
+        </div>
+    </div>     
+    {% endfor %}       
+
+</div>
+
+{% endblock content%}

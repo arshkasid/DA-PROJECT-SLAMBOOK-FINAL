@@ -1,0 +1,52 @@
+<!extending base template from the landing page>
+{%extends 'landing/base.html'%}
+
+<!makes form prettier>
+{% load crispy_forms_tags %}
+
+<!content block>
+
+{%block content%}
+<!creating container>
+<div class="container">
+
+    <!Back to Profile Button>
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <a href="{% url 'profile' object.pk %}" class ="btn btn-light">Back To Profile</a>
+        </div>
+    </div>
+    
+
+
+    <!For Header>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <h5> Update Your Profile </h5>
+        </div>
+    </div>
+    
+
+
+    <! where actual form is stored>
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <!creating a form tag>
+
+            <!enctype="multipart/form-data" for image files>
+            <form method="POST" enctype="multipart/form-data">
+                <!putting our actual form>
+                {% csrf_token %} <! required while making a post form in django>
+                {{ form | crispy}}
+
+                <!create a submit button>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success mt-3">Submit!</button>
+                    <!btn btn-dark if you want the black submit button>
+                </div>
+            </form>
+        </div>
+    </div>   
+</div>
+
+{% endblock content%}

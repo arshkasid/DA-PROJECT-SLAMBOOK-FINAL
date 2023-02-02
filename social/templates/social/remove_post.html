@@ -1,0 +1,36 @@
+{%extends 'landing/base.html'%}
+
+{%block content%}
+<div class="container">
+
+    <!Back to feed Button>
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <!adding a url so that we can go back i.e. back button to go back to the social feed>
+            <a href="{% url 'post-detail' object.pk %}" class ="btn btn-light">Back To Post</a>
+        </div>
+    </div>
+    
+
+
+    <! where actual form is stored>
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <!creating a form tag>
+            <form method="POST">
+                <!putting our actual form>
+                {% csrf_token %} <! required while making a post form in django>
+                <h5>Are You Sure</h5>
+                <p>You are about to delete this post, this cannot be undone.</p>
+
+                <!create a submit button>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-danger mt-3">Delete!</button>
+                    <!btn btn-danger for red button>
+                </div>
+            </form>
+        </div>
+    </div>   
+</div>
+
+{% endblock content%}

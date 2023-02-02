@@ -1,0 +1,20 @@
+<!Inherit from base template>
+{% extends 'landing/base.html' %}
+
+<!content block>
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10 col-sm-12 text-center">
+            <h1 class="display-2">Welcome to SlamBook!</h>
+            <p class="mt-4 lead">Connect with your Friends and Family, Share what you're upto and Join Conversations!  </p>
+            <div class="d-flex justify-content-center mt-5">
+                <!Putting 2 buttons side by side>
+                <a href="{% url 'account_login' %}" class="btn btn-light mr-2">Log In</a>
+                <a href="{% url 'account_signup' %}" class="btn btn-dark">Register</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
